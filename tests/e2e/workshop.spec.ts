@@ -1,8 +1,9 @@
 import { expect, test } from "@playwright/test";
 
 test("facilitates two segments through warnings, pause, overtime, and summary", async ({ page }) => {
-  await page.clock.install({ time: new Date("2026-09-01T08:00:00Z") });
+  await page.clock.install({ time: new Date("2026-09-01T07:59:00Z") });
   await page.goto("./");
+  await page.clock.pauseAt(new Date("2026-09-01T08:00:00Z"));
 
   await page.getByRole("button", { name: "Add segment" }).click();
   await page.getByLabel("Segment name").fill("Welcome");
