@@ -331,6 +331,10 @@ button:disabled {
   line-height: 1;
 }
 
+.plan-intro h1 {
+  color: oklch(0.52 0.16 145);
+}
+
 .plan-intro > p:last-child,
 .live-placeholder > p:last-child {
   max-width: 58ch;
