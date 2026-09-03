@@ -49,6 +49,27 @@ button:disabled {
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr;
+  background-color: var(--color-canvas);
+  background-image:
+    linear-gradient(
+      oklch(0.975 0.012 80 / 0.74),
+      oklch(0.975 0.012 80 / 0.74)
+    ),
+    url("./assets/cat-watch-1.png"),
+    url("./assets/cat-watch-2.png"),
+    url("./assets/cat-watch-3.png");
+  background-size:
+    auto,
+    220px 220px,
+    200px 200px,
+    210px 210px;
+  background-position:
+    0 0,
+    0 0,
+    110px 110px,
+    55px 165px;
+  background-repeat: repeat;
+  background-attachment: fixed;
 }
 
 .app-header {
@@ -57,6 +78,8 @@ button:disabled {
   gap: 1rem;
   padding: 1.5rem clamp(1.25rem, 4vw, 4rem);
   border-bottom: 1px solid var(--color-border);
+  background: color-mix(in oklch, var(--color-surface), transparent 12%);
+  backdrop-filter: blur(10px);
 }
 
 .eyebrow,
