@@ -154,10 +154,14 @@ button:disabled {
   --live-progress: oklch(0.84 0.13 72);
 }
 
-.live-timer[data-tone="red"],
-.live-timer[data-tone="overtime"] {
+.live-timer[data-tone="red"] {
   --live-background: oklch(0.95 0.035 25);
   --live-progress: oklch(0.78 0.12 28);
+}
+
+.live-timer[data-tone="overtime"] {
+  --live-background: oklch(0.88 0.12 35);
+  --live-progress: oklch(0.72 0.18 32);
 }
 
 .live-timer[data-tone="paused"] {
