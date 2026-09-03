@@ -270,6 +270,8 @@ export default function App({
           onConfirm={resetRecovery}
         />
       ) : null}
+
+      <footer className="app-footer" role="contentinfo">One Team One Dream</footer>
     </div>
   );
 }

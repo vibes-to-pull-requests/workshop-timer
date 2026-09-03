@@ -79,7 +79,7 @@ export default function PlanEditor({
     <section className="plan-editor" aria-labelledby="plan-title">
       <div className="plan-intro">
         <p className="eyebrow">Your run of show</p>
-        <h1 id="plan-title">Plan your workshop</h1>
+        <h1 id="plan-title">Plan your AMAZING workshop!!!</h1>
         <p>Build one continuous sequence. You can fine-tune it until the workshop starts.</p>
       </div>
 
