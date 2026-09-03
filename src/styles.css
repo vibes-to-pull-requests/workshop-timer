@@ -49,6 +49,7 @@ button:disabled {
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  padding-bottom: 3.25rem;
 }
 
 .app-header {
@@ -78,8 +79,14 @@ button:disabled {
 }
 
 .app-footer {
-  padding: 1.25rem clamp(1.25rem, 4vw, 4rem);
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  padding: 1rem clamp(1.25rem, 4vw, 4rem);
   border-top: 1px solid var(--color-border);
+  background: var(--color-canvas);
   color: var(--color-muted);
   font-size: 0.875rem;
   font-weight: 700;
