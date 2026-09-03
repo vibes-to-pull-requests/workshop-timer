@@ -34,6 +34,7 @@ describe("App", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Stay present. Stay on time.")).toBeInTheDocument();
+    expect(screen.getByText("One Team One Dream")).toBeInTheDocument();
   });
 
   it("autosaves an unfinished draft and hydrates it on the next render", async () => {
