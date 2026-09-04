@@ -10,7 +10,12 @@ afterEach(() => {
 describe("share", () => {
   it("downloads when native sharing is unavailable", async () => {
     const click = vi.fn();
-    const link = { click } as HTMLAnchorElement;
+    const link = {
+      click,
+      href: "",
+      download: "",
+      rel: "",
+    } as unknown as HTMLAnchorElement;
     vi.spyOn(document, "createElement").mockReturnValue(link);
 
     const result = await shareImageForInstagram("data:image/jpeg;base64,abc", {
@@ -49,7 +54,12 @@ describe("share", () => {
 
   it("downloads an image directly", () => {
     const click = vi.fn();
-    const link = { click, href: "", download: "" } as HTMLAnchorElement;
+    const link = {
+      click,
+      href: "",
+      download: "",
+      rel: "",
+    } as unknown as HTMLAnchorElement;
     vi.spyOn(document, "createElement").mockReturnValue(link);
 
     downloadImage("data:image/jpeg;base64,abc", "workshop.jpg");
