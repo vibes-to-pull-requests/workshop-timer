@@ -4,8 +4,8 @@ import { createPreparingState, transition } from "./reducer";
 import type { Segment, WorkshopState } from "./types";
 
 const segments: Segment[] = [
-  { id: "intro", name: "  Introduction  ", durationMinutes: 30 },
-  { id: "lesson", name: "Lesson", durationMinutes: 60 },
+  { id: "intro", name: "  Introduction  ", facilitator: "", durationMinutes: 30 },
+  { id: "lesson", name: "Lesson", facilitator: "", durationMinutes: 60 },
 ];
 
 const apply = (state: WorkshopState, event: Parameters<typeof transition>[1]): WorkshopState => {
@@ -35,7 +35,7 @@ describe("workshop transitions", () => {
   });
 
   it("rejects invalid plans without changing the original state", () => {
-    const state = createPreparingState([{ id: "bad", name: " ", durationMinutes: 0 }]);
+    const state = createPreparingState([{ id: "bad", name: " ", facilitator: "", durationMinutes: 0 }]);
     const result = transition(state, { type: "start", nowMs: 0 });
 
     expect(result).toEqual(expect.objectContaining({ ok: false, state }));
@@ -46,7 +46,7 @@ describe("workshop transitions", () => {
     const preparing = createPreparingState(segments);
     const editedSegments = [
       ...segments,
-      { id: "close", name: "Close", durationMinutes: 10 },
+      { id: "close", name: "Close", facilitator: "", durationMinutes: 10 },
     ];
     const edited = apply(preparing, { type: "set-plan", segments: editedSegments });
     expect(edited).toEqual(expect.objectContaining({ status: "preparing", segments: editedSegments }));
@@ -98,8 +98,8 @@ describe("workshop transitions", () => {
     expect(state).toEqual({
       status: "completed",
       segments: [
-        { id: "intro", name: "Introduction", durationMinutes: 30 },
-        { id: "lesson", name: "Lesson", durationMinutes: 60 },
+        { id: "intro", name: "Introduction", facilitator: "", durationMinutes: 30 },
+        { id: "lesson", name: "Lesson", facilitator: "", durationMinutes: 60 },
       ],
       summary: {
         segments: [

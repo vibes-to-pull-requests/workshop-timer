@@ -292,6 +292,13 @@ button:disabled {
   line-height: 1;
 }
 
+.segment-facilitator {
+  margin: 0.75rem 0 0;
+  color: var(--color-muted);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 600;
+}
+
 .timer-value {
   margin: 0.2em 0 0;
   font-variant-numeric: tabular-nums;
@@ -317,6 +324,56 @@ button:disabled {
 
 .next-segment strong {
   font-size: clamp(1rem, 2vw, 1.35rem);
+}
+
+.segment-music {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid color-mix(in oklch, var(--color-ink), transparent 82%);
+  border-radius: 0.8rem;
+  background: color-mix(in oklch, white, transparent 52%);
+}
+
+.segment-music-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.segment-music-label {
+  margin: 0;
+  color: color-mix(in oklch, var(--color-ink), transparent 35%);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.segment-music-toggle {
+  min-height: 2.75rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid color-mix(in oklch, var(--color-ink), transparent 70%);
+  border-radius: 0.65rem;
+  background: color-mix(in oklch, white, transparent 35%);
+  color: var(--color-ink);
+  font-weight: 750;
+}
+
+.segment-music-embed {
+  width: 100%;
+  border: 0;
+  border-radius: 0.75rem;
+}
+
+.segment-music[data-provider="youtube"] .segment-music-embed {
+  height: 12rem;
+}
+
+.segment-music[data-provider="spotify"] .segment-music-embed {
+  height: 5rem;
 }
 
 .live-actions {
@@ -411,6 +468,10 @@ button:disabled {
   line-height: 1;
 }
 
+.plan-intro h1 {
+  color: oklch(0.52 0.16 145);
+}
+
 .plan-intro > p:last-child,
 .live-placeholder > p:last-child {
   max-width: 58ch;
@@ -451,11 +512,15 @@ button:disabled {
 
 .segment-row {
   display: grid;
-  grid-template-columns: 2rem minmax(12rem, 1fr) minmax(10rem, 0.4fr) auto;
+  grid-template-columns: 2rem minmax(10rem, 1fr) minmax(8rem, 0.75fr) minmax(10rem, 0.4fr) auto;
   align-items: start;
   gap: 1.25rem;
   padding: 1.25rem;
   border-bottom: 1px solid var(--color-border);
+}
+
+.segment-music-field {
+  grid-column: 2 / -1;
 }
 
 .segment-row:last-child {
@@ -510,6 +575,11 @@ button:disabled {
 
 .field-error {
   color: var(--color-critical);
+  font-size: 0.78rem;
+}
+
+.field-hint {
+  color: var(--color-muted);
   font-size: 0.78rem;
 }
 
@@ -951,8 +1021,10 @@ button:disabled {
   }
 
   .segment-name-field,
+  .facilitator-field,
   .duration-field,
-  .segment-actions {
+  .segment-actions,
+  .segment-music-field {
     grid-column: 2;
   }
 
@@ -984,6 +1056,11 @@ button:disabled {
   }
 
   .live-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .segment-music-header {
     align-items: stretch;
     flex-direction: column;
   }

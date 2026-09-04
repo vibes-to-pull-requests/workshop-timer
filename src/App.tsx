@@ -282,7 +282,7 @@ export default function App({
         />
       ) : null}
 
-      <footer className="app-footer" role="contentinfo">One Team One Dream</footer>
+      <footer className="app-footer" role="contentinfo">One Team One Dream One Bean</footer>
     </div>
   );
 }

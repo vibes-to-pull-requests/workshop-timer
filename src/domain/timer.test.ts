@@ -13,7 +13,7 @@ import type { RunningState } from "./types";
 
 const runningState = (durationMinutes: number): RunningState => ({
   status: "running",
-  segments: [{ id: "one", name: "Lesson", durationMinutes }],
+  segments: [{ id: "one", name: "Lesson", facilitator: "", durationMinutes }],
   currentSegmentIndex: 0,
   completedActualMs: [],
   currentAccumulatedMs: 0,

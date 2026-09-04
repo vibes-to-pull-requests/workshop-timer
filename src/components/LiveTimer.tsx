@@ -9,6 +9,7 @@ import {
 } from "../domain/timer";
 import type { LiveWorkshopState } from "../domain/types";
 import ConfirmDialog from "./ConfirmDialog";
+import SegmentMusicPlayer from "./SegmentMusicPlayer";
 
 interface LiveTimerProps {
   readonly state: LiveWorkshopState;
@@ -82,6 +83,9 @@ export default function LiveTimer({
 
         <div className="current-segment">
           <h1 id="current-segment-title" ref={headingRef} tabIndex={-1}>{segment.name}</h1>
+          {segment.facilitator ? (
+            <p className="segment-facilitator">Facilitator: {segment.facilitator}</p>
+          ) : null}
           <p className="timer-value" data-testid="timer-value" role="timer" aria-live="off">
             {formatTimerValue(remainingMs)}
           </p>
@@ -96,6 +100,12 @@ export default function LiveTimer({
         ) : (
           <div className="next-segment"><span>Final segment</span><strong>Finish when you are ready</strong></div>
         )}
+
+        <SegmentMusicPlayer
+          key={segment.id}
+          music={segment.music}
+          workshopPaused={state.status === "paused"}
+        />
 
         <div className="live-actions">
           <button

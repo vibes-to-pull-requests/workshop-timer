@@ -285,6 +285,7 @@ function isSummary(value: Record<string, unknown>, segments: readonly Segment[])
     if (
       item.segmentId !== segment.id ||
       item.name !== segment.name ||
+      (typeof item.facilitator === "string" ? item.facilitator : "") !== (segment.facilitator ?? "") ||
       item.plannedMs !== plannedMs ||
       !isFiniteNonNegative(item.actualMs) ||
       item.varianceMs !== item.actualMs - plannedMs
@@ -310,6 +311,7 @@ function isSegments(value: unknown, requireValidPlan: boolean): value is readonl
       isRecord(segment) &&
       typeof segment.id === "string" &&
       typeof segment.name === "string" &&
+      (segment.facilitator === undefined || typeof segment.facilitator === "string") &&
       typeof segment.durationMinutes === "number" &&
       Number.isFinite(segment.durationMinutes),
   );
