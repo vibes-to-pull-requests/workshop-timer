@@ -69,6 +69,25 @@ describe("LiveTimer", () => {
     expect(screen.getByTestId("live-timer")).toHaveStyle({ "--remaining": "25%" });
   });
 
+  it("drives urgency styling from elapsed time", () => {
+    render(<LiveTimer state={running} nowMs={0} onPause={vi.fn()} onResume={vi.fn()} onNext={vi.fn()} onFinish={vi.fn()} onNewPlan={vi.fn()} />);
+
+    const liveTimer = screen.getByTestId("live-timer");
+    const timerShell = screen.getByTestId("timer-value").closest(".timer-value-shell");
+    expect(liveTimer.style.getPropertyValue("--timer-base-scale")).toBe("0.05");
+    expect(timerShell).toHaveAttribute("data-urgency-phase", "calm");
+    expect(timerShell).toHaveAttribute("data-urgency-animate", "true");
+    expect(screen.getAllByText("10:00")).toHaveLength(36);
+  });
+
+  it("pauses urgency animation while the timer is paused", () => {
+    const paused: PausedState = { ...running, status: "paused", currentAccumulatedMs: 550_000, pausedAtMs: 700_000 };
+    render(<LiveTimer state={paused} nowMs={999_999} onPause={vi.fn()} onResume={vi.fn()} onNext={vi.fn()} onFinish={vi.fn()} onNewPlan={vi.fn()} />);
+
+    const timerShell = screen.getByTestId("timer-value").closest(".timer-value-shell");
+    expect(timerShell).toHaveAttribute("data-urgency-animate", "false");
+  });
+
   it("shows segment music controls when a segment has a linked soundtrack", async () => {
     const user = userEvent.setup();
     const withMusic = {

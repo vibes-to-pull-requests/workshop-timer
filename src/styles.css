@@ -247,6 +247,7 @@ button:disabled {
 .current-segment {
   align-self: center;
   text-align: center;
+  overflow: visible;
 }
 
 .current-segment h1 {
@@ -257,6 +258,31 @@ button:disabled {
   line-height: 1;
 }
 
+.timer-value-shell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(100%, 42rem);
+  margin-inline: auto;
+  min-height: min(28rem, 52vh);
+  overflow: visible;
+}
+
+.timer-swarm-field {
+  position: relative;
+  width: 100%;
+  min-height: min(28rem, 52vh);
+}
+
+.timer-swarm-cell {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%) translate(var(--cell-x, 0), var(--cell-y, 0));
+  transform-origin: center center;
+}
+
 .segment-facilitator {
   margin: 0.75rem 0 0;
   color: var(--color-muted);
@@ -264,13 +290,59 @@ button:disabled {
   font-weight: 600;
 }
 
-.timer-value {
-  margin: 0.2em 0 0;
+.timer-swarm-cell-value {
+  display: block;
+  color: var(--color-ink);
   font-variant-numeric: tabular-nums;
-  font-size: clamp(5rem, 18vw, 13rem);
+  font-size: clamp(1rem, 2.8vw, 2rem);
   font-weight: 720;
   letter-spacing: -0.08em;
   line-height: 0.95;
+  white-space: nowrap;
+  transform: scale(var(--timer-base-scale, 1));
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.timer-value-shell[data-urgency-animate="true"] .timer-swarm-cell-value {
+  animation: timer-swarm-pulse var(--timer-pulse-duration, 3s) ease-in-out infinite;
+  animation-delay: var(--timer-pulse-delay, 0ms);
+}
+
+.timer-value-shell[data-urgency-animate="false"] .timer-swarm-cell-value {
+  animation: none;
+}
+
+.timer-value-shell[data-urgency-phase="pounding"] .timer-swarm-cell-value,
+.timer-value-shell[data-urgency-phase="overtime"] .timer-swarm-cell-value {
+  animation-name: timer-swarm-pound;
+  animation-timing-function: cubic-bezier(0.2, 0.85, 0.25, 1);
+}
+
+@keyframes timer-swarm-pulse {
+  0%,
+  100% {
+    transform: scale(var(--timer-base-scale, 1));
+  }
+
+  50% {
+    transform: scale(calc(var(--timer-base-scale, 1) * (1 + var(--timer-pulse-amplitude, 0.02))));
+  }
+}
+
+@keyframes timer-swarm-pound {
+  0%,
+  100% {
+    transform: scale(var(--timer-base-scale, 1));
+  }
+
+  28% {
+    transform: scale(calc(var(--timer-base-scale, 1) * (1 + var(--timer-pulse-amplitude, 0.08))));
+  }
+
+  48% {
+    transform: scale(calc(var(--timer-base-scale, 1) * (1 + var(--timer-pulse-amplitude, 0.08) * 0.35)));
+  }
 }
 
 .timer-caption {
