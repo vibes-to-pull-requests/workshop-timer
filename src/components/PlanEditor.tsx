@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { parseSegmentMusicUrl } from "../domain/music";
 import type { Segment } from "../domain/types";
 
 interface PlanEditorProps {
@@ -25,26 +26,48 @@ export default function PlanEditor({
   const [durationInputs, setDurationInputs] = useState<Record<string, string>>(
     () => Object.fromEntries(initialSegments.map((segment) => [segment.id, String(segment.durationMinutes)])),
   );
+  const [musicInputs, setMusicInputs] = useState<Record<string, string>>(
+    () => Object.fromEntries(initialSegments.map((segment) => [segment.id, segment.music?.url ?? ""])),
+  );
 
   const validity = segments.map((segment) => ({
     name: segment.name.trim().length > 0,
     duration: isPositiveWholeMinutes(durationInputs[segment.id] ?? ""),
+    music: isOptionalMusicValid(musicInputs[segment.id] ?? ""),
   }));
-  const planIsValid = segments.length > 0 && validity.every((item) => item.name && item.duration);
+  const planIsValid = segments.length > 0 && validity.every((item) => item.name && item.duration && item.music);
+
+  function enrichSegments(raw: readonly Segment[], inputs: Record<string, string> = musicInputs): Segment[] {
+    return raw.map((segment) => {
+      const musicInput = inputs[segment.id] ?? "";
+      const parsed = parseSegmentMusicUrl(musicInput);
+      if (parsed.ok && "music" in parsed) {
+        return { ...segment, music: parsed.music };
+      }
+      return {
+        id: segment.id,
+        name: segment.name,
+        durationMinutes: segment.durationMinutes,
+      };
+    });
+  }
+
+  function publish(raw: readonly Segment[], inputs: Record<string, string> = musicInputs) {
+    const next = enrichSegments(raw, inputs);
+    setSegments([...next]);
+    onChange(next);
+  }
+
   const totalMinutes = segments.reduce(
     (total, segment, index) => total + (validity[index]?.duration ? segment.durationMinutes : 0),
     0,
   );
 
-  function publish(next: readonly Segment[]) {
-    setSegments([...next]);
-    onChange(next);
-  }
-
   function addSegment() {
     const id = createId();
     const next = [...segments, { id, name: "", durationMinutes: 0 }];
     setDurationInputs((current) => ({ ...current, [id]: "" }));
+    setMusicInputs((current) => ({ ...current, [id]: "" }));
     publish(next);
   }
 
@@ -60,6 +83,11 @@ export default function PlanEditor({
 
   function removeSegment(id: string) {
     setDurationInputs((current) => {
+      const next = { ...current };
+      delete next[id];
+      return next;
+    });
+    setMusicInputs((current) => {
       const next = { ...current };
       delete next[id];
       return next;
@@ -101,6 +129,7 @@ export default function PlanEditor({
         {segments.map((segment, index) => {
           const nameErrorId = `${segment.id}-name-error`;
           const durationErrorId = `${segment.id}-duration-error`;
+          const musicErrorId = `${segment.id}-music-error`;
           const itemValidity = validity[index]!;
           return (
             <div className="segment-row" data-testid={`segment-${segment.id}`} key={segment.id}>
@@ -137,6 +166,27 @@ export default function PlanEditor({
                 <button type="button" disabled={index === segments.length - 1} aria-label={`Move ${segment.name || `segment ${index + 1}`} down`} onClick={() => moveSegment(index, 1)}>↓</button>
                 <button className="delete-button" type="button" aria-label={`Delete ${segment.name || `segment ${index + 1}`}`} onClick={() => removeSegment(segment.id)}>Delete</button>
               </div>
+              <div className="field segment-music-field">
+                <label htmlFor={`${segment.id}-music`}>Segment music (optional)</label>
+                <input
+                  id={`${segment.id}-music`}
+                  value={musicInputs[segment.id] ?? ""}
+                  aria-invalid={!itemValidity.music}
+                  aria-describedby={!itemValidity.music ? musicErrorId : undefined}
+                  placeholder="YouTube or Spotify link"
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    const nextMusicInputs = { ...musicInputs, [segment.id]: value };
+                    setMusicInputs(nextMusicInputs);
+                    publish(segments, nextMusicInputs);
+                  }}
+                />
+                {!itemValidity.music ? (
+                  <span className="field-error" id={musicErrorId}>Enter a valid YouTube or Spotify link.</span>
+                ) : segment.music ? (
+                  <span className="field-hint">Linked from {segment.music.provider === "youtube" ? "YouTube" : "Spotify"}.</span>
+                ) : null}
+              </div>
             </div>
           );
         })}
@@ -149,7 +199,7 @@ export default function PlanEditor({
           <span className="footer-label">Planned duration</span>
           <strong>{formatTotal(totalMinutes)}</strong>
         </div>
-        <button className="start-button" type="button" disabled={!planIsValid || !canPersist} onClick={() => onStart(segments)}>Start workshop</button>
+        <button className="start-button" type="button" disabled={!planIsValid || !canPersist} onClick={() => onStart(enrichSegments(segments))}>Start workshop</button>
       </footer>
     </section>
   );
@@ -157,6 +207,11 @@ export default function PlanEditor({
 
 function isPositiveWholeMinutes(value: string): boolean {
   return /^[1-9]\d*$/.test(value);
+}
+
+function isOptionalMusicValid(value: string): boolean {
+  const parsed = parseSegmentMusicUrl(value);
+  return parsed.ok;
 }
 
 function formatTotal(minutes: number): string {

@@ -1,13 +1,15 @@
+import { parseSegmentMusicUrl } from "./music";
 import type { Segment } from "./types";
 
-export type PlanValidationField = "plan" | "id" | "name" | "durationMinutes";
+export type PlanValidationField = "plan" | "id" | "name" | "durationMinutes" | "music";
 
 export type PlanValidationCode =
   | "empty-plan"
   | "blank-id"
   | "duplicate-id"
   | "blank-name"
-  | "invalid-duration";
+  | "invalid-duration"
+  | "invalid-music";
 
 export interface PlanValidationError {
   readonly segmentIndex?: number;
@@ -71,6 +73,18 @@ export function validatePlan(segments: readonly Segment[]): PlanValidationError[
         message: "Duration must be a positive whole number of minutes.",
       });
     }
+
+    if (segment.music) {
+      const parsed = parseSegmentMusicUrl(segment.music.url);
+      if (!parsed.ok || !("music" in parsed)) {
+        errors.push({
+          segmentIndex,
+          field: "music",
+          code: "invalid-music",
+          message: parsed.ok ? "Enter a valid YouTube or Spotify link." : parsed.message,
+        });
+      }
+    }
   });
 
   return errors;
@@ -81,9 +95,18 @@ export function isPlanValid(segments: readonly Segment[]): boolean {
 }
 
 export function normalizePlan(segments: readonly Segment[]): Segment[] {
-  return segments.map((segment) => ({
-    ...segment,
-    id: segment.id.trim(),
-    name: segment.name.trim(),
-  }));
+  return segments.map((segment) => {
+    const normalized = {
+      id: segment.id.trim(),
+      name: segment.name.trim(),
+      durationMinutes: segment.durationMinutes,
+    };
+    if (!segment.music) return normalized;
+
+    const parsed = parseSegmentMusicUrl(segment.music.url);
+    if (parsed.ok && "music" in parsed) {
+      return { ...normalized, music: parsed.music };
+    }
+    return normalized;
+  });
 }
