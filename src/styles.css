@@ -257,6 +257,13 @@ button:disabled {
   line-height: 1;
 }
 
+.segment-facilitator {
+  margin: 0.75rem 0 0;
+  color: var(--color-muted);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 600;
+}
+
 .timer-value {
   margin: 0.2em 0 0;
   font-variant-numeric: tabular-nums;
@@ -416,7 +423,7 @@ button:disabled {
 
 .segment-row {
   display: grid;
-  grid-template-columns: 2rem minmax(12rem, 1fr) minmax(10rem, 0.4fr) auto;
+  grid-template-columns: 2rem minmax(10rem, 1fr) minmax(8rem, 0.75fr) minmax(10rem, 0.4fr) auto;
   align-items: start;
   gap: 1.25rem;
   padding: 1.25rem;
@@ -693,6 +700,7 @@ button:disabled {
   }
 
   .segment-name-field,
+  .facilitator-field,
   .duration-field,
   .segment-actions {
     grid-column: 2;

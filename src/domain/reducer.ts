@@ -119,6 +119,7 @@ function completeWorkshop(
     return {
       segmentId: segment.id,
       name: segment.name,
+      facilitator: segment.facilitator ?? "",
       plannedMs,
       actualMs,
       varianceMs: actualMs - plannedMs,

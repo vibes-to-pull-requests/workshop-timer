@@ -82,6 +82,9 @@ export default function LiveTimer({
 
         <div className="current-segment">
           <h1 id="current-segment-title" ref={headingRef} tabIndex={-1}>{segment.name}</h1>
+          {segment.facilitator ? (
+            <p className="segment-facilitator">Facilitator: {segment.facilitator}</p>
+          ) : null}
           <p className="timer-value" data-testid="timer-value" role="timer" aria-live="off">
             {formatTimerValue(remainingMs)}
           </p>

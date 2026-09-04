@@ -6,6 +6,7 @@ import type { Segment } from "./types";
 const segment = (overrides: Partial<Segment> = {}): Segment => ({
   id: "segment-1",
   name: "Introduction",
+  facilitator: "",
   durationMinutes: 30,
   ...overrides,
 });

@@ -8,8 +8,8 @@ import LiveTimer from "./LiveTimer";
 const running: RunningState = {
   status: "running",
   segments: [
-    { id: "one", name: "Lesson one", durationMinutes: 10 },
-    { id: "two", name: "Break", durationMinutes: 5 },
+    { id: "one", name: "Lesson one", facilitator: "Alex", durationMinutes: 10 },
+    { id: "two", name: "Break", facilitator: "", durationMinutes: 5 },
   ],
   currentSegmentIndex: 0,
   completedActualMs: [],
@@ -22,6 +22,7 @@ describe("LiveTimer", () => {
     render(<LiveTimer state={running} nowMs={1_000} onPause={vi.fn()} onResume={vi.fn()} onNext={vi.fn()} onFinish={vi.fn()} onNewPlan={vi.fn()} />);
 
     expect(screen.getByRole("heading", { name: "Lesson one" })).toBeInTheDocument();
+    expect(screen.getByText("Facilitator: Alex")).toBeInTheDocument();
     expect(screen.getByTestId("timer-value")).toHaveTextContent("09:59");
     expect(screen.getByText("Break · 5 min")).toBeInTheDocument();
   });

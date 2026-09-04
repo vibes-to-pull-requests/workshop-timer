@@ -85,5 +85,6 @@ export function normalizePlan(segments: readonly Segment[]): Segment[] {
     ...segment,
     id: segment.id.trim(),
     name: segment.name.trim(),
+    facilitator: (segment.facilitator ?? "").trim(),
   }));
 }
