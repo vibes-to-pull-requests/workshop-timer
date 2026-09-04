@@ -7,9 +7,11 @@ import {
   getRemainingProportion,
   getTimerTone,
 } from "../domain/timer";
+import { getTimerUrgencyMetrics, buildTimerSwarmLayout } from "../domain/timerUrgency";
 import type { LiveWorkshopState } from "../domain/types";
 import ConfirmDialog from "./ConfirmDialog";
 import SegmentMusicPlayer from "./SegmentMusicPlayer";
+import TimerSwarm from "./TimerSwarm";
 
 interface LiveTimerProps {
   readonly state: LiveWorkshopState;
@@ -44,9 +46,18 @@ export default function LiveTimer({
   const remainingMs = getRemainingMs(state, nowMs);
   const tone = state.status === "paused" ? "paused" : getTimerTone(state, nowMs);
   const proportion = getRemainingProportion(state, nowMs);
+  const urgency = getTimerUrgencyMetrics(state, nowMs);
+  const timerValue = formatTimerValue(remainingMs);
+  const timerSwarm = buildTimerSwarmLayout(urgency.swarmSpreadMultiplier);
   const isFinal = next === undefined;
   const statusLabel = getStatusLabel(tone);
-  const style = { "--remaining": `${proportion * 100}%` } as CSSProperties;
+  const style = {
+    "--remaining": `${proportion * 100}%`,
+    "--timer-base-scale": urgency.baseScale,
+    "--timer-pulse-amplitude": urgency.pulseAmplitude,
+    "--timer-pulse-duration": `${urgency.pulseDurationMs}ms`,
+    "--timer-pulse-delay": `${urgency.pulseDelayMs}ms`,
+  } as CSSProperties;
 
   useEffect(() => {
     headingRef.current?.focus();
@@ -86,9 +97,13 @@ export default function LiveTimer({
           {segment.facilitator ? (
             <p className="segment-facilitator">Facilitator: {segment.facilitator}</p>
           ) : null}
-          <p className="timer-value" data-testid="timer-value" role="timer" aria-live="off">
-            {formatTimerValue(remainingMs)}
-          </p>
+          <div
+            className="timer-value-shell"
+            data-urgency-phase={urgency.phase}
+            data-urgency-animate={urgency.animate ? "true" : "false"}
+          >
+            <TimerSwarm value={timerValue} cells={timerSwarm} />
+          </div>
           <p className="timer-caption">{remainingMs < 0 ? "over allocated time" : "remaining"}</p>
         </div>
 
