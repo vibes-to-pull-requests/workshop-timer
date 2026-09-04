@@ -6,8 +6,8 @@ import type { Segment } from "../domain/types";
 import PlanEditor from "./PlanEditor";
 
 const plan: Segment[] = [
-  { id: "intro", name: "Introduction", durationMinutes: 15 },
-  { id: "lesson", name: "Lesson", durationMinutes: 45 },
+  { id: "intro", name: "Introduction", facilitator: "", durationMinutes: 15 },
+  { id: "lesson", name: "Lesson", facilitator: "", durationMinutes: 45 },
 ];
 
 function setup(segments: readonly Segment[] = plan) {
@@ -33,7 +33,7 @@ describe("PlanEditor", () => {
     await user.click(screen.getByRole("button", { name: "Add segment" }));
     expect(onChange).toHaveBeenLastCalledWith([
       ...plan,
-      { id: "new-segment", name: "", durationMinutes: 0 },
+      { id: "new-segment", name: "", facilitator: "", durationMinutes: 0 },
     ]);
 
     const first = screen.getByTestId("segment-intro");
@@ -42,7 +42,7 @@ describe("PlanEditor", () => {
     expect(onChange).toHaveBeenLastCalledWith([
       { ...plan[0], name: "Welcome" },
       plan[1],
-      { id: "new-segment", name: "", durationMinutes: 0 },
+      { id: "new-segment", name: "", facilitator: "", durationMinutes: 0 },
     ]);
 
     await user.click(
@@ -53,13 +53,13 @@ describe("PlanEditor", () => {
     expect(onChange).toHaveBeenLastCalledWith([
       plan[1],
       { ...plan[0], name: "Welcome" },
-      { id: "new-segment", name: "", durationMinutes: 0 },
+      { id: "new-segment", name: "", facilitator: "", durationMinutes: 0 },
     ]);
 
     await user.click(within(first).getByRole("button", { name: "Delete Welcome" }));
     expect(onChange).toHaveBeenLastCalledWith([
       plan[1],
-      { id: "new-segment", name: "", durationMinutes: 0 },
+      { id: "new-segment", name: "", facilitator: "", durationMinutes: 0 },
     ]);
   });
 
@@ -95,6 +95,65 @@ describe("PlanEditor", () => {
 
     await user.type(names[0]!, "Lesson");
     expect(screen.getByRole("button", { name: "Start workshop" })).toBeEnabled();
+  });
+
+  it("stores facilitator names on segments", async () => {
+    const { onChange, user } = setup([plan[0]]);
+
+    await user.type(screen.getByLabelText("Facilitator"), "Alex");
+
+    expect(onChange).toHaveBeenLastCalledWith([
+      { ...plan[0], facilitator: "Alex" },
+    ]);
+  });
+
+  it("accepts optional YouTube and Spotify links per segment", async () => {
+    const { onChange, onStart, user } = setup([plan[0]]);
+    const music = screen.getByLabelText("Segment music (optional)");
+
+    await user.type(music, "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+    expect(onChange).toHaveBeenLastCalledWith([
+      {
+        ...plan[0],
+        music: {
+          provider: "youtube",
+          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        },
+      },
+    ]);
+    expect(screen.getByText("Linked from YouTube.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Start workshop" })).toBeEnabled();
+
+    await user.clear(music);
+    await user.type(music, "https://open.spotify.com/track/11dFghVXANMlKmJXsNCbNl");
+    expect(onChange).toHaveBeenLastCalledWith([
+      {
+        ...plan[0],
+        music: {
+          provider: "spotify",
+          url: "https://open.spotify.com/track/11dFghVXANMlKmJXsNCbNl",
+        },
+      },
+    ]);
+    await user.click(screen.getByRole("button", { name: "Start workshop" }));
+    expect(onStart).toHaveBeenCalledWith([
+      {
+        ...plan[0],
+        music: {
+          provider: "spotify",
+          url: "https://open.spotify.com/track/11dFghVXANMlKmJXsNCbNl",
+        },
+      },
+    ]);
+  });
+
+  it("rejects invalid music links and blocks starting", async () => {
+    const { user } = setup([plan[0]]);
+    const music = screen.getByLabelText("Segment music (optional)");
+
+    await user.type(music, "https://example.com/not-music");
+    expect(screen.getByText("Enter a valid YouTube or Spotify link.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Start workshop" })).toBeDisabled();
   });
 
   it("blocks Start when durable storage is unavailable", () => {

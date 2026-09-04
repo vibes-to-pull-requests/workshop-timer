@@ -20,5 +20,5 @@ test("reload restores an active workshop paused without counting closed time", a
 test("the built app refreshes at its repository base path", async ({ page }) => {
   await page.goto("/workshop-timer/");
   await page.reload();
-  await expect(page.getByRole("heading", { name: "Plan my workshop" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Plan your AMAZING workshop!!!" })).toBeVisible();
 });

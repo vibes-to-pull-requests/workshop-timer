@@ -8,8 +8,8 @@ import LiveTimer from "./LiveTimer";
 const running: RunningState = {
   status: "running",
   segments: [
-    { id: "one", name: "Lesson one", durationMinutes: 10 },
-    { id: "two", name: "Break", durationMinutes: 5 },
+    { id: "one", name: "Lesson one", facilitator: "Alex", durationMinutes: 10 },
+    { id: "two", name: "Break", facilitator: "", durationMinutes: 5 },
   ],
   currentSegmentIndex: 0,
   completedActualMs: [],
@@ -22,6 +22,7 @@ describe("LiveTimer", () => {
     render(<LiveTimer state={running} nowMs={1_000} onPause={vi.fn()} onResume={vi.fn()} onNext={vi.fn()} onFinish={vi.fn()} onNewPlan={vi.fn()} />);
 
     expect(screen.getByRole("heading", { name: "Lesson one" })).toBeInTheDocument();
+    expect(screen.getByText("Facilitator: Alex")).toBeInTheDocument();
     expect(screen.getByTestId("timer-value")).toHaveTextContent("09:59");
     expect(screen.getByText("Break · 5 min")).toBeInTheDocument();
   });
@@ -66,6 +67,38 @@ describe("LiveTimer", () => {
   it("drains its background in proportion to exact remaining time", () => {
     render(<LiveTimer state={running} nowMs={450_000} onPause={vi.fn()} onResume={vi.fn()} onNext={vi.fn()} onFinish={vi.fn()} onNewPlan={vi.fn()} />);
     expect(screen.getByTestId("live-timer")).toHaveStyle({ "--remaining": "25%" });
+  });
+
+  it("shows segment music controls when a segment has a linked soundtrack", async () => {
+    const user = userEvent.setup();
+    const withMusic = {
+      ...running,
+      segments: [
+        {
+          ...running.segments[0],
+          music: {
+            provider: "youtube" as const,
+            url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          },
+        },
+        running.segments[1],
+      ],
+    };
+    render(
+      <LiveTimer
+        state={withMusic}
+        nowMs={1_000}
+        onPause={vi.fn()}
+        onResume={vi.fn()}
+        onNext={vi.fn()}
+        onFinish={vi.fn()}
+        onNewPlan={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("YouTube soundtrack")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Play music" }));
+    expect(screen.getByTitle("YouTube player for segment")).toBeInTheDocument();
   });
 
   it("offers Finish on the last segment and confirms destructive actions", async () => {

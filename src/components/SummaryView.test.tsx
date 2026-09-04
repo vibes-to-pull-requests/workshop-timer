@@ -8,13 +8,13 @@ import SummaryView from "./SummaryView";
 const completed: CompletedState = {
   status: "completed",
   segments: [
-    { id: "intro", name: "Introduction", durationMinutes: 10 },
-    { id: "lesson", name: "Lesson", durationMinutes: 20 },
+    { id: "intro", name: "Introduction", facilitator: "Alex", durationMinutes: 10 },
+    { id: "lesson", name: "Lesson", facilitator: "", durationMinutes: 20 },
   ],
   summary: {
     segments: [
-      { segmentId: "intro", name: "Introduction", plannedMs: 600_000, actualMs: 720_000, varianceMs: 120_000 },
-      { segmentId: "lesson", name: "Lesson", plannedMs: 1_200_000, actualMs: 1_080_000, varianceMs: -120_000 },
+      { segmentId: "intro", name: "Introduction", facilitator: "Alex", plannedMs: 600_000, actualMs: 720_000, varianceMs: 120_000 },
+      { segmentId: "lesson", name: "Lesson", facilitator: "", plannedMs: 1_200_000, actualMs: 1_080_000, varianceMs: -120_000 },
     ],
     plannedTotalMs: 1_800_000,
     actualTotalMs: 1_800_000,
@@ -29,8 +29,10 @@ describe("SummaryView", () => {
     const rows = screen.getAllByRole("row");
     expect(rows).toHaveLength(4);
     expect(within(rows[1]!).getByText("Introduction")).toBeInTheDocument();
+    expect(within(rows[1]!).getByText("Alex")).toBeInTheDocument();
     expect(within(rows[1]!).getByText("02:00 overtime")).toBeInTheDocument();
     expect(within(rows[2]!).getByText("Lesson")).toBeInTheDocument();
+    expect(within(rows[2]!).getByText("—")).toBeInTheDocument();
     expect(within(rows[2]!).getByText("02:00 under plan")).toBeInTheDocument();
     expect(within(rows[3]!).getByText("On plan")).toBeInTheDocument();
   });

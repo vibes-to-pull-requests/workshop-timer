@@ -6,6 +6,7 @@ import type { Segment } from "./types";
 const segment = (overrides: Partial<Segment> = {}): Segment => ({
   id: "segment-1",
   name: "Introduction",
+  facilitator: "",
   durationMinutes: 30,
   ...overrides,
 });
@@ -29,6 +30,20 @@ describe("validatePlan", () => {
       expect.arrayContaining([expect.objectContaining({ field, code })]),
     );
     expect(isPlanValid(plan)).toBe(false);
+  });
+
+  it("rejects invalid music links stored on a segment", () => {
+    const errors = validatePlan([
+      segment({
+        music: { provider: "youtube", url: "https://example.com/not-music" },
+      }),
+    ]);
+
+    expect(errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ field: "music", code: "invalid-music" }),
+      ]),
+    );
   });
 
   it("rejects missing and duplicate stable IDs", () => {
