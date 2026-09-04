@@ -3,7 +3,7 @@ import { useEffect, useEffectEvent, useRef, useState } from "react";
 import LiveTimer from "./components/LiveTimer";
 import PlanEditor from "./components/PlanEditor";
 import SummaryView from "./components/SummaryView";
-import ConfirmDialog from "./components/ConfirmDialog";
+import WorkshopMoments from "./components/WorkshopMoments";
 import { createPreparingState, transition } from "./domain/reducer";
 import { getTimerTone } from "./domain/timer";
 import type { Segment, WorkshopState } from "./domain/types";
@@ -214,7 +214,7 @@ export default function App({
     <div className="app-shell">
       <header className="app-header">
         <span className="brand">Workshop Timer</span>
-        <span className="tagline">Stay present. Stay on time.</span>
+        <span className="tagline">Stay sane. That's all it matters.</span>
       </header>
 
       <main className="app-main">
@@ -258,6 +258,9 @@ export default function App({
             onNewPlan={startNewPlan}
           />
         )}
+        {!recoveryError ? (
+          <WorkshopMoments storage={storage} createId={createId} now={now} />
+        ) : null}
       </main>
       {confirmingReset ? (
         <ConfirmDialog

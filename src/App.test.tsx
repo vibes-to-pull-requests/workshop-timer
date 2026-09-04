@@ -33,7 +33,7 @@ describe("App", () => {
         name: "Plan your AMAZING workshop!!!",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Stay present. Stay on time.")).toBeInTheDocument();
+    expect(screen.getByText("Stay sane. Stay awake.")).toBeInTheDocument();
     expect(screen.getByText("One Team One Dream")).toBeInTheDocument();
   });
 
