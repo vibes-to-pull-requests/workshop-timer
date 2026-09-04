@@ -43,12 +43,12 @@ export default function PlanEditor({
 
   function addSegment() {
     const id = createId();
-    const next = [...segments, { id, name: "", durationMinutes: 0 }];
+    const next = [...segments, { id, name: "", facilitator: "", durationMinutes: 0 }];
     setDurationInputs((current) => ({ ...current, [id]: "" }));
     publish(next);
   }
 
-  function updateSegment(id: string, updates: Partial<Pick<Segment, "name" | "durationMinutes">>) {
+  function updateSegment(id: string, updates: Partial<Pick<Segment, "name" | "facilitator" | "durationMinutes">>) {
     publish(segments.map((segment) => (segment.id === id ? { ...segment, ...updates } : segment)));
   }
 
@@ -116,6 +116,15 @@ export default function PlanEditor({
                   onChange={(event) => updateSegment(segment.id, { name: event.target.value })}
                 />
                 {!itemValidity.name ? <span className="field-error" id={nameErrorId}>Enter a segment name.</span> : null}
+              </div>
+              <div className="field facilitator-field">
+                <label htmlFor={`${segment.id}-facilitator`}>Facilitator</label>
+                <input
+                  id={`${segment.id}-facilitator`}
+                  value={segment.facilitator ?? ""}
+                  placeholder="e.g. Alex"
+                  onChange={(event) => updateSegment(segment.id, { facilitator: event.target.value })}
+                />
               </div>
               <div className="field duration-field">
                 <label htmlFor={`${segment.id}-duration`}>Duration in minutes</label>

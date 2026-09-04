@@ -14,8 +14,8 @@ import {
 } from "./storage";
 
 const segments: Segment[] = [
-  { id: "intro", name: "Introduction", durationMinutes: 30 },
-  { id: "lesson", name: "Lesson", durationMinutes: 60 },
+  { id: "intro", name: "Introduction", facilitator: "", durationMinutes: 30 },
+  { id: "lesson", name: "Lesson", facilitator: "", durationMinutes: 60 },
 ];
 
 class MemoryStorage implements StorageLike {
@@ -77,7 +77,7 @@ describe("snapshot round trips", () => {
   it("round-trips an unfinished preparation draft and ignores unrelated origin keys", () => {
     const storage = new MemoryStorage();
     const draft = createPreparingState([
-      { id: "draft", name: "", durationMinutes: 0 },
+      { id: "draft", name: "", facilitator: "", durationMinutes: 0 },
     ]);
     storage.values.set("another-app:key", "leave me alone");
 

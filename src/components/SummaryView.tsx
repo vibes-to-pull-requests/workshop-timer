@@ -25,12 +25,19 @@ export default function SummaryView({ state, onNewPlan }: SummaryViewProps) {
         <table className="summary-table">
           <caption className="sr-only">Planned and actual workshop timing</caption>
           <thead>
-            <tr><th scope="col">Segment</th><th scope="col">Planned</th><th scope="col">Actual</th><th scope="col">Difference</th></tr>
+            <tr>
+              <th scope="col">Segment</th>
+              <th scope="col">Facilitator</th>
+              <th scope="col">Planned</th>
+              <th scope="col">Actual</th>
+              <th scope="col">Difference</th>
+            </tr>
           </thead>
           <tbody>
             {state.summary.segments.map((segment) => (
               <tr key={segment.segmentId}>
                 <th scope="row">{segment.name}</th>
+                <td>{segment.facilitator || "—"}</td>
                 <td>{formatElapsed(segment.plannedMs)}</td>
                 <td>{formatElapsed(segment.actualMs)}</td>
                 <td><Variance value={segment.varianceMs} /></td>
@@ -40,6 +47,7 @@ export default function SummaryView({ state, onNewPlan }: SummaryViewProps) {
           <tfoot>
             <tr>
               <th scope="row">Total</th>
+              <td />
               <td>{formatElapsed(state.summary.plannedTotalMs)}</td>
               <td>{formatElapsed(state.summary.actualTotalMs)}</td>
               <td><Variance value={state.summary.varianceTotalMs} /></td>
