@@ -30,10 +30,11 @@ describe("App", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Plan your workshop",
+        name: "Plan your AMAZING workshop!!!",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Stay sane. That's all it matters.")).toBeInTheDocument();
+    expect(screen.getByText("Stay sane. Stay awake.")).toBeInTheDocument();
+    expect(screen.getByText("One Team One Dream")).toBeInTheDocument();
   });
 
   it("autosaves an unfinished draft and hydrates it on the next render", async () => {
@@ -81,7 +82,7 @@ describe("App", () => {
 
     await user.click(screen.getByRole("button", { name: "Start workshop" }));
 
-    expect(screen.getByRole("heading", { name: "Plan your workshop" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Plan your AMAZING workshop!!!" })).toBeInTheDocument();
     expect(screen.getByRole("alert")).toHaveTextContent("could not be saved");
   });
 
@@ -206,13 +207,13 @@ describe("App", () => {
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Resume" })).toBeDisabled();
-    expect(screen.queryByRole("heading", { name: "Plan your workshop" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Plan your AMAZING workshop!!!" })).not.toBeInTheDocument();
 
     storage.failWrites = false;
     await user.click(screen.getByRole("button", { name: "Retry save" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Resume" })).toBeEnabled();
-    expect(screen.queryByRole("heading", { name: "Plan your workshop" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Plan your AMAZING workshop!!!" })).not.toBeInTheDocument();
   });
 
   it("renders a storage-unavailable state when the browser storage getter throws", () => {
@@ -250,7 +251,7 @@ describe("App", () => {
     expect(storage.values.get(STORAGE_KEY)).toBe(raw);
     await user.click(screen.getByRole("button", { name: "Reset saved workshop" }));
     await user.click(screen.getByRole("button", { name: "Reset and start over" }));
-    expect(screen.getByRole("heading", { name: "Plan your workshop" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Plan your AMAZING workshop!!!" })).toBeInTheDocument();
     expect(storage.values.get(STORAGE_KEY)).toContain('"status":"preparing"');
   });
 
@@ -287,7 +288,7 @@ describe("App", () => {
     expect(storage.values.get(STORAGE_KEY)).toContain('"status":"completed"');
     await user.click(screen.getByRole("button", { name: "New plan" }));
     await user.click(screen.getByRole("button", { name: "Start new plan" }));
-    expect(screen.getByRole("heading", { name: "Plan your workshop" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Plan your AMAZING workshop!!!" })).toBeInTheDocument();
     expect(storage.values.get(STORAGE_KEY)).toContain('"status":"preparing"');
   });
 });
