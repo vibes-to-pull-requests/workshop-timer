@@ -41,14 +41,16 @@ export default function PlanEditor({
     return raw.map((segment) => {
       const musicInput = inputs[segment.id] ?? "";
       const parsed = parseSegmentMusicUrl(musicInput);
-      if (parsed.ok && "music" in parsed) {
-        return { ...segment, music: parsed.music };
-      }
-      return {
+      const base: Segment = {
         id: segment.id,
         name: segment.name,
+        facilitator: segment.facilitator ?? "",
         durationMinutes: segment.durationMinutes,
       };
+      if (parsed.ok && "music" in parsed) {
+        return { ...base, music: parsed.music };
+      }
+      return base;
     });
   }
 
