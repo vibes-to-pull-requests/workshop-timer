@@ -32,6 +32,20 @@ describe("validatePlan", () => {
     expect(isPlanValid(plan)).toBe(false);
   });
 
+  it("rejects invalid music links stored on a segment", () => {
+    const errors = validatePlan([
+      segment({
+        music: { provider: "youtube", url: "https://example.com/not-music" },
+      }),
+    ]);
+
+    expect(errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ field: "music", code: "invalid-music" }),
+      ]),
+    );
+  });
+
   it("rejects missing and duplicate stable IDs", () => {
     const errors = validatePlan([
       segment({ id: " " }),
