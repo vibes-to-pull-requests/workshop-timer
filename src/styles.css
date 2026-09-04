@@ -17,6 +17,11 @@
   --color-accent: oklch(0.59 0.13 48);
   --color-warning: oklch(0.72 0.16 65);
   --color-critical: oklch(0.58 0.19 27);
+  --color-segment-surface: oklch(0.985 0.014 55 / 0.9);
+  --color-segment-row-a: oklch(0.97 0.02 40 / 0.72);
+  --color-segment-row-b: oklch(0.97 0.018 155 / 0.68);
+  --color-segment-number: oklch(0.94 0.022 70 / 0.88);
+  --color-segment-input: oklch(0.995 0.01 55 / 0.94);
   --radius-card: 1.5rem;
   --shadow-card: 0 24px 60px oklch(0.25 0.03 60 / 0.08);
 }
@@ -147,8 +152,8 @@ button:disabled {
 }
 
 .live-timer {
-  --live-background: oklch(0.965 0.022 210);
-  --live-progress: oklch(0.88 0.065 210);
+  --live-background: oklch(0.975 0.018 48);
+  --live-progress: oklch(0.91 0.045 58);
   position: relative;
   isolation: isolate;
   width: min(100%, 70rem);
@@ -253,9 +258,9 @@ button:disabled {
   gap: 0.3rem;
   margin-bottom: 1.5rem;
   padding: 1rem 1.25rem;
-  border: 1px solid color-mix(in oklch, var(--color-ink), transparent 82%);
+  border: 1px solid color-mix(in oklch, var(--color-ink), transparent 84%);
   border-radius: 0.8rem;
-  background: color-mix(in oklch, white, transparent 52%);
+  background: color-mix(in oklch, var(--color-segment-row-b), white 18%);
 }
 
 .next-segment strong {
@@ -371,9 +376,10 @@ button:disabled {
 }
 
 .segment-list {
-  border: 1px solid var(--color-border);
+  border: 1px solid color-mix(in oklch, var(--color-border), var(--color-accent) 12%);
   border-radius: var(--radius-card);
-  background: var(--color-surface);
+  background: var(--color-segment-surface);
+  backdrop-filter: blur(8px);
   box-shadow: var(--shadow-card);
   overflow: hidden;
 }
@@ -398,7 +404,15 @@ button:disabled {
   align-items: start;
   gap: 1.25rem;
   padding: 1.25rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid color-mix(in oklch, var(--color-border), transparent 20%);
+}
+
+.segment-row:nth-child(odd) {
+  background: var(--color-segment-row-a);
+}
+
+.segment-row:nth-child(even) {
+  background: var(--color-segment-row-b);
 }
 
 .segment-row:last-child {
@@ -413,7 +427,7 @@ button:disabled {
   margin-top: 1.7rem;
   border-radius: 999px;
   color: var(--color-muted);
-  background: var(--color-canvas);
+  background: var(--color-segment-number);
   font-size: 0.8rem;
   font-weight: 750;
 }
@@ -436,10 +450,10 @@ button:disabled {
   width: 100%;
   min-height: 3rem;
   padding: 0.75rem 0.9rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid color-mix(in oklch, var(--color-border), var(--color-accent) 8%);
   border-radius: 0.65rem;
   color: var(--color-ink);
-  background: white;
+  background: var(--color-segment-input);
 }
 
 .field input:focus {
@@ -482,10 +496,10 @@ button:disabled {
 .add-button {
   min-height: 2.75rem;
   padding: 0.55rem 0.8rem;
-  border: 1px solid var(--color-border);
+  border: 1px solid color-mix(in oklch, var(--color-border), var(--color-accent) 10%);
   border-radius: 0.65rem;
   color: var(--color-ink);
-  background: var(--color-surface);
+  background: color-mix(in oklch, var(--color-segment-input), white 35%);
 }
 
 .delete-button {
