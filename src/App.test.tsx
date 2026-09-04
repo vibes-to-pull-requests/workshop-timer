@@ -33,7 +33,7 @@ describe("App", () => {
         name: "Plan your workshop",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Stay present. Stay on time.")).toBeInTheDocument();
+    expect(screen.getByText("Stay sane. That's all it matters.")).toBeInTheDocument();
   });
 
   it("autosaves an unfinished draft and hydrates it on the next render", async () => {
