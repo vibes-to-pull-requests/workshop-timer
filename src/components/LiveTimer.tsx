@@ -9,6 +9,7 @@ import {
 } from "../domain/timer";
 import type { LiveWorkshopState } from "../domain/types";
 import ConfirmDialog from "./ConfirmDialog";
+import SegmentMusicPlayer from "./SegmentMusicPlayer";
 
 interface LiveTimerProps {
   readonly state: LiveWorkshopState;
@@ -99,6 +100,12 @@ export default function LiveTimer({
         ) : (
           <div className="next-segment"><span>Final segment</span><strong>Finish when you are ready</strong></div>
         )}
+
+        <SegmentMusicPlayer
+          key={segment.id}
+          music={segment.music}
+          workshopPaused={state.status === "paused"}
+        />
 
         <div className="live-actions">
           <button

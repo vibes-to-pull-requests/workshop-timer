@@ -69,6 +69,38 @@ describe("LiveTimer", () => {
     expect(screen.getByTestId("live-timer")).toHaveStyle({ "--remaining": "25%" });
   });
 
+  it("shows segment music controls when a segment has a linked soundtrack", async () => {
+    const user = userEvent.setup();
+    const withMusic = {
+      ...running,
+      segments: [
+        {
+          ...running.segments[0],
+          music: {
+            provider: "youtube" as const,
+            url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          },
+        },
+        running.segments[1],
+      ],
+    };
+    render(
+      <LiveTimer
+        state={withMusic}
+        nowMs={1_000}
+        onPause={vi.fn()}
+        onResume={vi.fn()}
+        onNext={vi.fn()}
+        onFinish={vi.fn()}
+        onNewPlan={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("YouTube soundtrack")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Play music" }));
+    expect(screen.getByTitle("YouTube player for segment")).toBeInTheDocument();
+  });
+
   it("offers Finish on the last segment and confirms destructive actions", async () => {
     const user = userEvent.setup();
     const onFinish = vi.fn();

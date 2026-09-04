@@ -107,6 +107,55 @@ describe("PlanEditor", () => {
     ]);
   });
 
+  it("accepts optional YouTube and Spotify links per segment", async () => {
+    const { onChange, onStart, user } = setup([plan[0]]);
+    const music = screen.getByLabelText("Segment music (optional)");
+
+    await user.type(music, "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+    expect(onChange).toHaveBeenLastCalledWith([
+      {
+        ...plan[0],
+        music: {
+          provider: "youtube",
+          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        },
+      },
+    ]);
+    expect(screen.getByText("Linked from YouTube.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Start workshop" })).toBeEnabled();
+
+    await user.clear(music);
+    await user.type(music, "https://open.spotify.com/track/11dFghVXANMlKmJXsNCbNl");
+    expect(onChange).toHaveBeenLastCalledWith([
+      {
+        ...plan[0],
+        music: {
+          provider: "spotify",
+          url: "https://open.spotify.com/track/11dFghVXANMlKmJXsNCbNl",
+        },
+      },
+    ]);
+    await user.click(screen.getByRole("button", { name: "Start workshop" }));
+    expect(onStart).toHaveBeenCalledWith([
+      {
+        ...plan[0],
+        music: {
+          provider: "spotify",
+          url: "https://open.spotify.com/track/11dFghVXANMlKmJXsNCbNl",
+        },
+      },
+    ]);
+  });
+
+  it("rejects invalid music links and blocks starting", async () => {
+    const { user } = setup([plan[0]]);
+    const music = screen.getByLabelText("Segment music (optional)");
+
+    await user.type(music, "https://example.com/not-music");
+    expect(screen.getByText("Enter a valid YouTube or Spotify link.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Start workshop" })).toBeDisabled();
+  });
+
   it("blocks Start when durable storage is unavailable", () => {
     render(
       <PlanEditor

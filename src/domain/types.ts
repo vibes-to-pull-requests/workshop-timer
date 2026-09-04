@@ -1,8 +1,16 @@
+export type MusicProvider = "youtube" | "spotify";
+
+export interface SegmentMusic {
+  readonly provider: MusicProvider;
+  readonly url: string;
+}
+
 export interface Segment {
   readonly id: string;
   readonly name: string;
   readonly facilitator: string;
   readonly durationMinutes: number;
+  readonly music?: SegmentMusic;
 }
 
 interface ActiveWorkshopState {
