@@ -75,12 +75,47 @@ button:disabled {
 
 .app-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 1rem;
   padding: 1.5rem clamp(1.25rem, 4vw, 4rem);
   border-bottom: 1px solid var(--color-border);
   background: color-mix(in oklch, var(--color-surface), transparent 12%);
   backdrop-filter: blur(10px);
+}
+
+.app-header-brand {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.trainer-avatar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 0.8rem 0.45rem 0.45rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--color-surface), transparent 8%);
+  box-shadow: var(--shadow-card);
+}
+
+.trainer-avatar-image {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 999px;
+  object-fit: cover;
+  object-position: center top;
+  border: 2px solid color-mix(in oklch, var(--color-accent), white 35%);
+}
+
+.trainer-avatar-tagline {
+  padding-right: 0.35rem;
+  color: var(--color-accent);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .eyebrow,
@@ -752,10 +787,233 @@ button:disabled {
   background: var(--color-critical);
 }
 
+.moments-view {
+  width: min(100%, 70rem);
+  margin: 2.5rem auto 0;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: color-mix(in oklch, var(--color-surface), transparent 6%);
+  box-shadow: var(--shadow-card);
+}
+
+.moments-intro {
+  margin-bottom: 1.5rem;
+}
+
+.moments-intro h2 {
+  margin: 0.65rem 0;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.moments-intro > p:last-child {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.moments-form {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.moments-upload {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+}
+
+.moments-file-input {
+  display: none;
+}
+
+.moments-action-button,
+.moments-save-button {
+  min-height: 3rem;
+  padding: 0.75rem 1.1rem;
+  border: 0;
+  border-radius: 0.7rem;
+  color: white;
+  background: var(--color-accent);
+  font-weight: 750;
+}
+
+.moments-file-name {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.moments-caption-field,
+.moments-note-field {
+  max-width: 42rem;
+}
+
+.moments-note-field textarea {
+  width: 100%;
+  min-height: 6.5rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.65rem;
+  color: var(--color-ink);
+  background: white;
+  resize: vertical;
+}
+
+.moments-preview {
+  margin: 0 0 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-canvas);
+}
+
+.moments-preview img {
+  display: block;
+  width: 100%;
+  max-height: 24rem;
+  object-fit: cover;
+}
+
+.moments-preview-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.9rem 1rem 1rem;
+}
+
+.moments-status {
+  margin-bottom: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid color-mix(in oklch, var(--color-accent), white 55%);
+  border-radius: 0.75rem;
+  color: var(--color-accent);
+  background: color-mix(in oklch, var(--color-accent), white 92%);
+}
+
+.moments-preview-audio {
+  padding: 1rem 1.25rem;
+}
+
+.moments-preview-audio audio,
+.moment-audio-wrap audio {
+  width: 100%;
+}
+
+.moments-empty {
+  padding: 2rem;
+  text-align: center;
+  border: 1px dashed var(--color-border);
+  border-radius: 1rem;
+}
+
+.moments-empty p {
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+
+.moments-empty span {
+  color: var(--color-muted);
+}
+
+.moments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 1.25rem;
+}
+
+.moment-card {
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-canvas);
+}
+
+.moment-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.moment-audio-wrap,
+.moment-note-preview {
+  display: grid;
+  place-items: center;
+  min-height: 8rem;
+  padding: 1rem;
+  background: color-mix(in oklch, var(--color-surface), transparent 10%);
+}
+
+.moment-note-preview {
+  align-content: start;
+  justify-items: start;
+  color: var(--color-ink);
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.moment-card-body {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1rem;
+}
+
+.moment-card-body time {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.moment-caption,
+.moment-note {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.moment-note {
+  color: color-mix(in oklch, var(--color-ink), transparent 10%);
+}
+
+.moment-delete-button {
+  justify-self: start;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.55rem;
+  color: var(--color-critical);
+  background: transparent;
+  font-weight: 700;
+}
+
+.moment-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.moment-share-button {
+  padding: 0.45rem 0.7rem;
+  border: 0;
+  border-radius: 0.55rem;
+  color: white;
+  background: var(--color-accent);
+  font-weight: 700;
+}
+
 @media (max-width: 34rem) {
   .app-header {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .trainer-avatar {
+    align-self: flex-end;
   }
 
   .segment-row {

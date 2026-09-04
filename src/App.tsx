@@ -4,6 +4,8 @@ import LiveTimer from "./components/LiveTimer";
 import PlanEditor from "./components/PlanEditor";
 import SummaryView from "./components/SummaryView";
 import ConfirmDialog from "./components/ConfirmDialog";
+import WorkshopMoments from "./components/WorkshopMoments";
+import trainerAvatar from "./assets/trainer-avatar.png";
 import { createPreparingState, transition } from "./domain/reducer";
 import { getTimerTone } from "./domain/timer";
 import type { Segment, WorkshopState } from "./domain/types";
@@ -213,8 +215,14 @@ export default function App({
   return (
     <div className="app-shell">
       <header className="app-header">
-        <span className="brand">Workshop Timer</span>
-        <span className="tagline">Stay present. Stay on time.</span>
+        <div className="app-header-brand">
+          <span className="brand">Workshop Timer</span>
+          <span className="tagline">Stay sane. Stay awake.</span>
+        </div>
+        <div className="trainer-avatar">
+          <img className="trainer-avatar-image" src={trainerAvatar} alt="Workshop trainer" />
+          <span className="trainer-avatar-tagline">24/7</span>
+        </div>
       </header>
 
       <main className="app-main">
@@ -258,6 +266,9 @@ export default function App({
             onNewPlan={startNewPlan}
           />
         )}
+        {!recoveryError ? (
+          <WorkshopMoments storage={storage} createId={createId} now={now} />
+        ) : null}
       </main>
       {confirmingReset ? (
         <ConfirmDialog
